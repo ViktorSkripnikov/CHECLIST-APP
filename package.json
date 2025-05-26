@@ -1,8 +1,7 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "index.ts",
   "name": "checklist-app",
   "version": "1.0.0",
-  "main": "index.ts",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -22,7 +21,10 @@
     "react-native": "0.79.2",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.10.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "expo-sharing": "~13.1.5",
+    "expo-print": "~14.1.4",
+    "react-native-webview": "13.13.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
