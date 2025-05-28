@@ -179,6 +179,9 @@ export default function ChecklistScreen({ route }: Props) {
   );
 }
 
+
+
+
 const styles = StyleSheet.create({
   container: { padding: 20 },
   section: { marginBottom: 25 },
