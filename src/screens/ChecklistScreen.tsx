@@ -1,4 +1,5 @@
 // screens/ChecklistScreen.tsx
+// Импортируем необходимые компоненты и библиотеки
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TextInput, TouchableOpacity, StyleSheet, Button, Modal, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -8,48 +9,65 @@ import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import * as Print from 'expo-print';
 
+// Определяем тип пропсов для экрана
 type Props = NativeStackScreenProps<RootStackParamList, 'Чек-лист'>;
 
+// Варианты ответов для чек-листа
 const ANSWERS = ['Да', 'Нет', 'Н/П'];
 
+// Основной компонент экрана чек-листа
 export default function ChecklistScreen({ route }: Props) {
+    // Состояние для хранения данных чек-листа (получаем из параметров навигации)
   const [data, setData] = useState<ChecklistSection[]>(route.params.checklist);
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
-
+   // Состояние для отслеживания процесса генерации PDF
+    const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  
+  // Обработчик выбора ответа
   const handleAnswer = (sectionIdx: number, itemIdx: number, subIdx: number, answer: string) => {
+    // Создаем копию данных (чтобы не мутировать исходное состояние)
     const newData = [...data];
+    // Обновляем выбранный ответ в копии данных
     newData[sectionIdx].items[itemIdx].subitems[subIdx].answer = answer;
+    // Устанавливаем обновленные данные
     setData(newData);
   };
 
+  // Обработчик ввода комментария
   const handleComment = (sectionIdx: number, itemIdx: number, subIdx: number, text: string) => {
+    // Аналогично обработчику ответа, но для комментария
     const newData = [...data];
     newData[sectionIdx].items[itemIdx].subitems[subIdx].comment = text;
     setData(newData);
   };
 
+  // Просто выводит данные в консоль (для отладки)
   const handleSave = () => {
     console.log(JSON.stringify(data, null, 2));
   };
-
+  // Сохраняет данные чек-листа в файл JSON
   const handleExportToFile = async () => {
     try {
+      // Создаем уникальное имя файла с текущей меткой времени
       const filename = `checklist-result-${Date.now()}.json`;
+      // Формируем полный путь к файлу
       const path = FileSystem.documentDirectory + filename;
+      // Записываем данные в файл (в формате JSON)
       await FileSystem.writeAsStringAsync(path, JSON.stringify(data, null, 2), {
         encoding: FileSystem.EncodingType.UTF8,
       });
+      // Показываем уведомление об успешном сохранении
       alert(`✅ Чек-лист сохранён:\n${path}`);
     } catch (error) {
       alert('Ошибка при сохранении файла');
     }
   };
-
+  // Отправляет файл через стандартный механизм "поделиться" на устройстве
   const handleShareFile = async () => {
     try {
       const filename = `checklist-${Date.now()}.json`;
       const path = FileSystem.documentDirectory + filename;
       await FileSystem.writeAsStringAsync(path, JSON.stringify(data, null, 2));
+      // Открываем диалог "поделиться"
       await Sharing.shareAsync(path);
     } catch (error) {
       console.error('Ошибка при отправке:', error);
@@ -57,10 +75,12 @@ export default function ChecklistScreen({ route }: Props) {
     }
   };
 
-  // ИСПРАВЛЕННАЯ функция генерации PDF
+  // Генерация PDF отчета
   const generatePdf = async () => {
+    // Устанавливаем флаг генерации (для отображения индикатора)
     setIsGeneratingPdf(true);
     
+    // Формируем HTML-контент для PDF
     const htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -271,18 +291,29 @@ export default function ChecklistScreen({ route }: Props) {
     }
   };
 
+  // Рендер компонента
   return (
     <View style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.container}>
+        {/* Отображение структуры чек-листа */}
         {data.map((section, sectionIdx) => (
           <View key={sectionIdx} style={styles.section}>
+            {/* Заголовок секции */}
             <Text style={styles.sectionTitle}>{section.section}</Text>
+            
+            {/* Вопросы в секции */}
             {section.items.map((item, itemIdx) => (
               <View key={item.id}>
+                {/* Текст вопроса */}
                 <Text style={styles.itemTitle}>{item.id}. {item.question}</Text>
+                
+                {/* Подвопросы */}
                 {item.subitems.map((sub, subIdx) => (
                   <View key={sub.id} style={styles.subitem}>
+                    {/* Текст подвопроса */}
                     <Text style={styles.questionText}>{sub.id}. {sub.question}</Text>
+                    
+                    {/* Варианты ответов (Да/Нет/НП) */}
                     <View style={styles.answerRow}>
                       {ANSWERS.map(ans => (
                         <TouchableOpacity
@@ -297,6 +328,8 @@ export default function ChecklistScreen({ route }: Props) {
                         </TouchableOpacity>
                       ))}
                     </View>
+                    
+                    {/* Поле для комментария */}
                     <TextInput
                       placeholder="Добавить комментарий..."
                       value={sub.comment}
@@ -312,6 +345,7 @@ export default function ChecklistScreen({ route }: Props) {
           </View>
         ))}
         
+        {/* Кнопки действий */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
             <Text style={styles.buttonText}>💾 Сохранить</Text>
