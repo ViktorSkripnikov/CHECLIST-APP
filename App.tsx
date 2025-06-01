@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './screens/HomeScreen';
-import ChecklistScreen from './screens/ChecklistScreen';
-import { ChecklistSection } from './utils/parsedChecklist';
+import HomeScreen from './src/screens/HomeScreen';
+import ChecklistScreen from './src/screens/ChecklistScreen';
+import { ChecklistSection } from './src/utils/parsedChecklist';
 
 export type RootStackParamList = {
   Главная: undefined;
