@@ -70,16 +70,5 @@ npx expo start
 1. Добавь файл `README.md` в git:
 
 
-
-```bash
-git add README.md
-git commit -m "📝 Добавлен README с описанием проекта"
-```bash
-git add README.md
-git commit -m "📝 Добавлен README с описанием проекта"
-```bash
-git add README.md
-git commit -m "📝 Добавлен README с описанием проекта"
-```bash
 git add README.md
 git commit -m "📝 Добавлен README с описанием проекта"
